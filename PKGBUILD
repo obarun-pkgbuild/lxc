@@ -8,13 +8,13 @@
 
 pkgname=lxc
 epoch=1
-pkgver=2.0.8
-pkgrel=3
+pkgver=2.1.0
+pkgrel=2
 pkgdesc="Linux Containers"
 arch=(x86_64)
 url="http://linuxcontainers.org"
 depends=('bash' 'perl' 'libseccomp' 'libcap' 'python' 'cgmanager' 'rsync')
-makedepends=('docbook2x' 'lua')
+makedepends=('docbook2x' 'lua' 'python-setuptools')
 optdepends=('arch-install-scripts: for archlinux template'
 	    'dnsmasq: lxc-net.service'
 	    'lua'
@@ -25,13 +25,14 @@ license=('LGPL')
 options=('emptydirs')
 backup=('etc/lxc/default.conf'
 	'etc/default/lxc')
+install=lxc.install
 validpgpkeys=('602F567663E593BCBD14F338C638974D64792D67')
 source=("http://linuxcontainers.org/downloads/${pkgname}-${pkgver}.tar.gz"
 	"lxc.tmpfiles.d"
-	"https://github.com/lxc/lxc/commit/57927bf2550feccadba2127a193023e7c54d9ca4.patch")
-md5sums=('7bfd95280522d7936c0979dfea92cdb5'
+	"00-storage_overlay-do_not_write_to_invalid_memory.patch::https://github.com/brauner/lxc/commit/180c477a326ce85632249ff16990e8c29db1b6fa.patch")
+md5sums=('a951c2f6dcfc77fc4efedb2e75115d85'
          'df94c9fb8a753011c86ee664e9f521ff'
-         '66652c56e7e48ba1c6b42f146e289386')
+         'f3499bf2993a4bac0f79599549324db5')
 validpgpkeys=('6DD4217456569BA711566AC7F06E8FDE7B45DAAC') # Eric Vidal
 
 prepare() {
@@ -45,11 +46,7 @@ prepare() {
   sed -i \
     -e 's|\${prefix}/||g' \
     lxc.pc.in
-  sed -i \
-    -e "s|name='_lxc'|name='lxc'|" \
-    src/python-lxc/setup.py.in
-    
-    patch -p1 -i $srcdir/*.patch
+    patch -Np1 -i ../00-storage_overlay-do_not_write_to_invalid_memory.patch
 }
 
 build() {
