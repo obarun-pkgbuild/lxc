@@ -9,7 +9,7 @@
 pkgname=lxc
 epoch=1
 pkgver=2.1.0
-pkgrel=2
+pkgrel=3
 pkgdesc="Linux Containers"
 arch=(x86_64)
 url="http://linuxcontainers.org"
@@ -28,11 +28,9 @@ backup=('etc/lxc/default.conf'
 install=lxc.install
 validpgpkeys=('602F567663E593BCBD14F338C638974D64792D67')
 source=("http://linuxcontainers.org/downloads/${pkgname}-${pkgver}.tar.gz"
-	"lxc.tmpfiles.d"
-	"00-storage_overlay-do_not_write_to_invalid_memory.patch::https://github.com/brauner/lxc/commit/180c477a326ce85632249ff16990e8c29db1b6fa.patch")
+		"lxc.tmpfiles.d")
 md5sums=('a951c2f6dcfc77fc4efedb2e75115d85'
-         'df94c9fb8a753011c86ee664e9f521ff'
-         'f3499bf2993a4bac0f79599549324db5')
+         'df94c9fb8a753011c86ee664e9f521ff')
 validpgpkeys=('6DD4217456569BA711566AC7F06E8FDE7B45DAAC') # Eric Vidal
 
 prepare() {
@@ -41,18 +39,17 @@ prepare() {
     -e 's|"\\"-//Davenport//DTD DocBook V3.0//EN\\""|"\\"-//OASIS//DTD DocBook XML\\" \\"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd\\""|' \
     configure.ac
   sed -i \
-    -e 's|$(sysconfdir)/bash_completion.d/|/usr/share/bash-completion/completions/|g' \
-    config/bash/Makefile.am
-  sed -i \
     -e 's|\${prefix}/||g' \
     lxc.pc.in
-    patch -Np1 -i ../00-storage_overlay-do_not_write_to_invalid_memory.patch
+  sed -i \
+    -e 's|dirlen,|dirlen=0,|' \
+    src/lxc/storage/overlay.c
 }
 
 build() {
   cd "$srcdir/$pkgname-${pkgver/_/-}"
   ./autogen.sh
-  ./configure \
+  bashcompdir=/usr/share/bash-completion/completions ./configure \
     --prefix=/usr \
     --sbindir=/usr/bin \
     --localstatedir=/var \
