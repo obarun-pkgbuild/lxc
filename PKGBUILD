@@ -9,7 +9,7 @@
 pkgname=lxc
 epoch=1
 pkgver=2.1.1
-pkgrel=2
+pkgrel=3
 pkgdesc="Linux Containers"
 arch=(x86_64)
 url="http://linuxcontainers.org"
@@ -24,13 +24,16 @@ optdepends=('arch-install-scripts: for archlinux template'
 license=('LGPL')
 options=('emptydirs')
 backup=('etc/lxc/default.conf'
-	'etc/default/lxc')
+	'etc/default/lxc'
+	'etc/default/lxc-net')
 install=lxc.install
 validpgpkeys=('602F567663E593BCBD14F338C638974D64792D67')
 source=("http://linuxcontainers.org/downloads/${pkgname}-${pkgver}.tar.gz"
-		"lxc.tmpfiles.d")
+		"lxc.tmpfiles.d"
+		"lxc-net")
 md5sums=('596f7c96ec78e361b057499dbe994703'
-         'df94c9fb8a753011c86ee664e9f521ff')
+         'df94c9fb8a753011c86ee664e9f521ff'
+         'ef4d5b67d7a73a51fae686d37750957b')
 validpgpkeys=('6DD4217456569BA711566AC7F06E8FDE7B45DAAC') # Eric Vidal
 
 prepare() {
@@ -71,10 +74,10 @@ package() {
   cd "$srcdir/$pkgname-${pkgver/_/-}"
 
   make DESTDIR="$pkgdir" install
-  install -d -m755 "$pkgdir/var/lib/lxc"
-  install -d -m755 "$pkgdir/usr/lib/lxc/rootfs/dev"
-  install -D -m644 ${srcdir}/lxc.tmpfiles.d ${pkgdir}/usr/lib/tmpfiles.d/lxc.conf
-
+  install -d -m0755 "$pkgdir/var/lib/lxc"
+  install -d -m0755 "$pkgdir/usr/lib/lxc/rootfs/dev"
+  install -D -m0644 ${srcdir}/lxc.tmpfiles.d ${pkgdir}/usr/lib/tmpfiles.d/lxc.conf
+  install -D -m0644 ${srcdir}/lxc-net ${pkgdir}/etc/default/lxc-net
   cd doc
   find . -type f -name '*.1' -exec install -D -m644 "{}" "$pkgdir/usr/share/man/man1/{}" \;
   find . -type f -name '*.5' -exec install -D -m644 "{}" "$pkgdir/usr/share/man/man5/{}" \;
