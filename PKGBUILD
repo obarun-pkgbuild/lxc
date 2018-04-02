@@ -8,8 +8,8 @@
 
 pkgname=lxc
 epoch=1
-pkgver=2.1.1
-pkgrel=3
+pkgver=3.0.0
+pkgrel=2
 pkgdesc="Linux Containers"
 arch=(x86_64)
 url="http://linuxcontainers.org"
@@ -31,7 +31,7 @@ validpgpkeys=('602F567663E593BCBD14F338C638974D64792D67')
 source=("http://linuxcontainers.org/downloads/${pkgname}-${pkgver}.tar.gz"
 		"lxc.tmpfiles.d"
 		"lxc-net")
-md5sums=('596f7c96ec78e361b057499dbe994703'
+md5sums=('ca1db4f9dc35df9203a58ab606cdfb7a'
          'df94c9fb8a753011c86ee664e9f521ff'
          'ef4d5b67d7a73a51fae686d37750957b')
 validpgpkeys=('6DD4217456569BA711566AC7F06E8FDE7B45DAAC') # Eric Vidal
